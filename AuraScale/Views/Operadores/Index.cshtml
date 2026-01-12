@@ -1,0 +1,115 @@
+@model IEnumerable<AuraScale.Models.Operador>
+
+@{
+    ViewData["Title"] = "Gestão de Operadores";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark"><i class="fa fa-users me-2 text-primary"></i> Operadores</h2>
+            <p class="text-muted mb-0">Gerencie sua equipa e visualize as escalas atribuídas.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Importar" class="btn btn-outline-primary shadow-sm px-3">
+                <i class="fa fa-file-import me-1"></i> Importar Excel
+            </a>
+            <a asp-action="Create" class="btn btn-dark shadow-sm px-3">
+                <i class="fa fa-plus me-1"></i> Novo Operador
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase small fw-bold text-muted">Operador</th>
+                            <th class="py-3 text-uppercase small fw-bold text-muted">Função</th>
+                            <th class="py-3 text-uppercase small fw-bold text-muted">Escala Atual</th>
+                            <th class="pe-4 py-3 text-end text-uppercase small fw-bold text-muted">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-3 bg-primary-subtle text-primary fw-bold">
+                                            @item.Nome.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">@item.Nome</div>
+                                            <div class="text-muted small">@item.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-dark">@item.Funcao</span>
+                                </td>
+                                <td>
+                                    @if (item.ModeloEscala != null)
+                                    {
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle px-3 rounded-pill">
+                                            @item.ModeloEscala.Nome
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 rounded-pill">
+                                            Sem Escala
+                                        </span>
+                                    }
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <div class="d-flex justify-content-end gap-1">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm rounded-1" title="Editar">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark btn-sm rounded-1" title="Detalhes">
+                                            <i class="fa fa-search"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm rounded-1" title="Excluir">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilo para a letra inicial (Avatar) */
+    .avatar-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    /* Efeito de hover na tabela */
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,0,0,0.01);
+        transition: background-color 0.2s ease;
+    }
+
+    /* Botões de ação estilo "clean" */
+    .btn-white {
+        background: white;
+    }
+
+        .btn-white:hover {
+            background: #f8f9fa;
+        }
+</style>

@@ -1,0 +1,72 @@
+﻿@model AuraScale.Models.ModeloEscala
+
+@{
+    ViewData["Title"] = "Editar Modelo";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow mt-4 border-0 rounded-4 overflow-hidden">
+
+            <div class="card-header bg-dark text-white py-3 border-0">
+                <h5 class="mb-0 fw-bold"><i class="fa fa-layer-group me-2 text-info"></i> Editar Modelo de Escala</h5>
+            </div>
+
+            <div class="card-body p-4">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Nome" class="form-label fw-bold"></label>
+                        <input asp-for="Nome" class="form-control rounded-3" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CargaHorariaDiaria" class="form-label fw-bold">Jornada (Seg-Sex)</label>
+                        <input asp-for="CargaHorariaDiaria" type="time" class="form-control rounded-3" />
+                    </div>
+
+                    <hr class="text-muted opacity-25" />
+
+                    <div class="mb-3">
+                        <label asp-for="RegraSabado" class="form-label fw-bold text-info">Regra de Trabalho aos Sábados</label>
+                        <select asp-for="RegraSabado" id="selectRegraSabado" class="form-select rounded-3"
+                                asp-items="Html.GetEnumSelectList<AuraScale.Models.TipoTrabalhoSabado>()">
+                        </select>
+                    </div>
+
+                    <div class="mb-3" id="boxSabado" style="@(Model.RegraSabado != AuraScale.Models.TipoTrabalhoSabado.NaoTrabalha ? "display:block" : "display:none")">
+                        <label asp-for="CargaHorariaSabado" class="form-label fw-bold">Carga Horária de Sábado</label>
+                        <input asp-for="CargaHorariaSabado" type="time" class="form-control rounded-3" />
+                    </div>
+
+                    <div class="form-check form-switch mb-4">
+                        <input class="form-check-input" type="checkbox" asp-for="TrabalhaDomingo">
+                        <label class="form-check-label fw-bold">Trabalha aos Domingos?</label>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-2">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2 px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-success px-3 shadow-sm">
+                            <i class="fa fa-save me-2"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('selectRegraSabado').addEventListener('change', function() {
+            var box = document.getElementById('boxSabado');
+            box.style.display = (this.value !== "0") ? 'block' : 'none';
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Importar Operadores";
+}
+
+<div class="container py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark"><i class="fa fa-file-import me-2 text-primary"></i> Importação de Equipe</h2>
+        <p class="text-muted">Baixe o modelo padrão ou realize o upload da sua planilha .xlsx</p>
+    </div>
+
+    <div class="row g-4 align-items-stretch">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 rounded-4 h-100 p-4 text-center">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fa fa-file-download fa-4x text-primary mb-4"></i>
+                    <h4 class="fw-bold">Modelo de Planilha</h4>
+                    <p class="text-muted mb-4">Utilize nosso padrão para que o sistema identifique as colunas corretamente.</p>
+
+                    <div class="d-grid mt-auto">
+                        <a asp-action="BaixarPlanilhaExemplo" class="btn btn-outline-dark btn-lg shadow-sm fw-bold">
+                            <i class="fa fa-download me-2"></i> Baixar Exemplo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-header bg-dark text-white py-3 border-0">
+                    <h5 class="mb-0 fw-bold"><i class="fa fa-file-excel me-2 text-info"></i> Upload de Dados</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info border-0 small mb-4 rounded-3">
+                        <h6 class="fw-bold small"><i class="fa fa-info-circle me-1"></i> Ordem das Colunas:</h6>
+                        <span>A: Nome | B: Email | C: Função | D: Entrada | E: Escala</span>
+                    </div>
+
+                    <form asp-action="Importar" enctype="multipart/form-data" method="post">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase text-muted">Arquivo Excel (.xlsx)</label>
+                            <input type="file" name="arquivoExcel" class="form-control rounded-3" accept=".xlsx" required />
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-2">
+                            <a asp-action="Index" class="btn btn-secondary px-4">Voltar</a>
+                            <button type="submit" class="btn btn-success px-4 shadow-sm">
+                                <i class="fa fa-upload me-2"></i> Processar Importação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

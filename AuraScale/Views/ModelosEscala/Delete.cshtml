@@ -1,0 +1,34 @@
+﻿@model AuraScale.Models.ModeloEscala
+
+@{
+    ViewData["Title"] = "Excluir Modelo";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="alert alert-danger shadow-sm text-center">
+            <h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> Atenção!</h4>
+            <p>Tem certeza que deseja excluir o modelo <strong>@Model.Nome</strong>?</p>
+            <hr>
+            <p class="mb-0 small">Se houver operadores usando este modelo, eles ficarão sem regra definida.</p>
+        </div>
+
+        <div class="card shadow border-danger">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Nome:</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Nome)</dd>
+
+                    <dt class="col-sm-4">Jornada:</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.CargaHorariaDiaria)</dd>
+                </dl>
+
+                <form asp-action="Delete" class="text-end mt-3">
+                    <input type="hidden" asp-for="Id" />
+                    <a asp-action="Index" class="btn btn-secondary me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

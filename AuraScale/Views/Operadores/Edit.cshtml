@@ -1,0 +1,73 @@
+@model AuraScale.Models.Operador
+
+@{
+    ViewData["Title"] = "Editar Operador";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow mt-4 border-0">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="fa fa-user-edit me-2 text-info"></i> Editar Operador</h5>
+            </div>
+
+            <div class="card-body p-4">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Nome" class="form-label fw-bold"></label>
+                        <input asp-for="Nome" class="form-control rounded-3" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-bold"></label>
+                        <input asp-for="Email" class="form-control rounded-3" type="email" placeholder="exemplo@email.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Funcao" class="form-label fw-bold"></label>
+                        <input asp-for="Funcao" class="form-control rounded-3" />
+                        <span asp-validation-for="Funcao" class="text-danger"></span>
+                    </div>
+
+                    <hr class="text-muted opacity-25" />
+
+                    <div class="mb-3">
+                        <label asp-for="ModeloEscalaId" class="form-label fw-bold text-info">Modelo de Escala (Regra)</label>
+                        <select asp-for="ModeloEscalaId" class="form-select rounded-3" asp-items="ViewBag.ModeloEscalaId">
+                            <option value="">-- Selecione um Modelo --</option>
+                        </select>
+                        <div class="mt-1">
+                            <small class="text-muted">
+                                Não achou o modelo? <a asp-controller="ModelosEscala" asp-action="Create" class="text-decoration-none text-info fw-bold">Crie um novo aqui</a>.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="HorarioEntrada" class="form-label fw-bold"></label>
+                        <input asp-for="HorarioEntrada" type="time" class="form-control rounded-3" />
+                        <span asp-validation-for="HorarioEntrada" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-2">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2 px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-success px-3 shadow-sm">
+                            <i class="fa fa-save me-2"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

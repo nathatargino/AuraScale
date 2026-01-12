@@ -1,0 +1,44 @@
+## [ Segurança e Configurações Pessoais ]
+# Não sobe as senhas do banco de dados local ou segredos de desenvolvimento
+appsettings.Development.json
+appsettings.Local.json
+*.user
+*.userosscache
+*.sln.docstates
+UserSecrets/
+
+## [ Compilação e Build ]
+# Ignora as pastas onde o código compilado (DLLs) fica
+[Bb]in/
+[Oo]bj/
+[Aa]rm/
+[Aa]rm64/
+[Xx]64/
+[Xx]86/
+
+## [ Visual Studio ]
+# Arquivos de cache e configurações da IDE
+.vs/
+.vs*
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.opensdf
+*.sdf
+*.cache
+*.db
+*.opendb
+
+## [ Entity Framework ]
+# Ignora arquivos de log e banco de dados local do SQLite (se usar)
+*.db
+*.db-shm
+*.db-wal
+
+## [ Frontend / Outros ]
+# Se no futuro você adicionar Node.js ou ferramentas de front
+node_modules/
+.DS_Store
+dist/
+temp/

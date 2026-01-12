@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Configurar Geração";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow border-0 rounded-4 mt-5">
+            <div class="card-header bg-dark text-white py-3 border-0 rounded-top-4 text-center">
+                <h5 class="mb-0 fw-bold"><i class="fa fa-magic me-2 text-success"></i> Gerador de Escalas</h5>
+            </div>
+            <div class="card-body p-4 text-center">
+                <p class="text-muted mb-4">Selecione o período que deseja escalar para toda a sua equipe.</p>
+
+                <form asp-action="Gerar" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6 text-start">
+                            <label class="form-label fw-bold small text-uppercase">Data de Início</label>
+                            <input type="date" name="dataInicio" class="form-control rounded-3" required
+                                   value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-6 text-start">
+                            <label class="form-label fw-bold small text-uppercase">Data de Fim</label>
+                            <input type="date" name="dataFim" class="form-control rounded-3" required
+                                   value="@DateTime.Today.AddDays(7).ToString("yyyy-MM-dd")" />
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-4 rounded-3 border-0 small shadow-sm">
+                        <i class="fa fa-info-circle me-2"></i>
+                        <strong>Aviso:</strong> Escalas já existentes no período selecionado serão substituídas.
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm">
+                            <i class="fa fa-cogs me-2"></i> Processar Escala
+                        </button>
+                        <a asp-action="Dashboard" asp-controller="Home" class="btn btn-link text-muted text-decoration-none small">
+                            Cancelar e voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

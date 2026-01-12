@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AuraScale</title>
+    <link rel="stylesheet" href="~/css/quartz.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark shadow-lg"
+             style="background: linear-gradient(135deg, rgba(30, 30, 40, 0.95) 0%, rgba(50, 40, 80, 0.90) 100%); backdrop-filter: blur(10px);">
+
+            <div class="container">
+                <a class="navbar-brand fw-bold text-uppercase d-flex align-items-center" asp-controller="Home" asp-action="Index" style="letter-spacing: 1px;">
+                    <i class="fa-solid fa-layer-group me-2 text-info"></i> AuraScale
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav me-auto ms-lg-4">
+                        <li class="nav-item mx-lg-1">
+                            <a class="nav-link px-3 rounded" asp-controller="Home" asp-action="Index">
+                                <i class="fa-solid fa-house me-1" style="color: #ced4da;"></i> Início
+                            </a>
+                        </li>
+
+                        <li class="nav-item mx-lg-1">
+                            <a class="nav-link px-3 rounded" asp-controller="Operadores" asp-action="Index">
+                                <i class="fa fa-users me-1"></i> Equipe
+                            </a>
+                        </li>
+
+                        <li class="nav-item mx-lg-1">
+                            <a class="nav-link px-3 rounded" asp-controller="ModelosEscala" asp-action="Index">
+                                <i class="fa fa-cogs me-1"></i> Modelos
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted mt-5 py-3 text-center">
+        <div class="container">
+            &copy; 2026 - AuraScale - Gestão Inteligente de Escalas
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

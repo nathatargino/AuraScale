@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+@{
+    ViewData["Title"] = "Início";
+}
+
+<div class="px-4 py-5 my-5 text-center">
+    <div class="d-block mx-auto mb-4 text-info">
+        <i class="fa-solid fa-layer-group fa-5x"></i>
+    </div>
+
+    <h1 class="display-5 fw-bold text-white">AuraScale</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4 text-muted">
+            Gestão de escalas inteligente e flexível.
+            Do <strong>5x2</strong> ao <strong>6x1</strong>, organize os turnos da sua equipe, gerencie folgas e horas extras de segunda a domingo.
+        </p>
+
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a asp-controller="Operadores" asp-action="Index" class="btn btn-info btn-lg px-4 rounded shadow-sm fw-bold text-dark">
+                    <i class="fa fa-users me-2"></i> Acessar Minha Equipe
+                </a>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-info btn-lg px-4 rounded shadow-sm fw-bold text-dark">
+                    Começar Agora
+                </a>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-light btn-lg px-4 rounded fw-bold">
+                    Entrar
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container px-4 py-5" id="como-funciona">
+
+    <h2 class="pb-2 border-bottom">Por que usar o AuraScale?</h2>
+
+    <div class="row g-4 py-5 row-cols-1 row-cols-md-3">
+
+        <div class="col d-flex align-items-start">
+
+            <div>
+
+                <h3 class="fs-2">⚡ Rápido</h3>
+
+                <p>Crie a escala do mês inteiro em poucos cliques. O sistema sugere rotações automáticas.</p>
+
+            </div>
+
+        </div>
+
+        <div class="col d-flex align-items-start">
+
+            <div>
+
+                <h3 class="fs-2">👥 Gestão de Equipes</h3>
+
+                <p>Cada gestor vê apenas os seus operadores. Controle total sobre quem trabalha no fim de semana.</p>
+
+            </div>
+
+        </div>
+
+        <div class="col d-flex align-items-start">
+
+            <div>
+
+                <h3 class="fs-2">☁️ Na Nuvem</h3>
+
+                <p>Acesse de qualquer lugar. Seus dados seguros e hospedados no Azure.</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

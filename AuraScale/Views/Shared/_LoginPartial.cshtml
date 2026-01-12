@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    // Tenta pegar o Primeiro Nome (Google), se não achar, pega o Nome Completo, se não, usa o E-mail.
+    var nomeExibicao = User.FindFirstValue(ClaimTypes.GivenName)
+                       ?? User.FindFirstValue(ClaimTypes.Name)
+                       ?? User.Identity?.Name?.Split('@')[0];
+}
+
+<ul class="navbar-nav align-items-center gap-2">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        /* --- USUÁRIO LOGADO --- */
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white fw-bold small" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @User.Identity?.Name?.Split('@')[0]
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                        <i class="fa fa-user me-2"></i> Perfil
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="dropdown-item text-danger">
+                            <i class="fa fa-sign-out-alt me-2"></i> Sair
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+
+    }
+    else
+    {
+        /* --- USUÁRIO DESLOGADO --- */
+
+        <li class="nav-item">
+            <a class="btn btn-sm btn-outline-light rounded px-2 fw-bold" asp-area="Identity" asp-page="/Account/Login">
+                Entrar
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="btn btn-sm btn-info rounded px-2 fw-bold shadow-sm text-dark" asp-area="Identity" asp-page="/Account/Register">
+                Criar Conta
+            </a>
+        </li>
+    }
+</ul>

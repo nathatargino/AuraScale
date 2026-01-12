@@ -1,0 +1,59 @@
+@model AuraScale.Models.Operador
+
+@{
+    ViewData["Title"] = "Novo Operador";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">Cadastrar Operador</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nome" class="form-label"></label>
+                        <input asp-for="Nome" class="form-control" placeholder="Ex: João Silva" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Funcao" class="form-label"></label>
+                        <input asp-for="Funcao" class="form-control" placeholder="Ex: Caixa, Repositor..." />
+                        <span asp-validation-for="Funcao" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ModeloEscalaId" class="form-label fw-bold text-info">Modelo de Escala (Opcional)</label>
+                        <select asp-for="ModeloEscalaId" class="form-select rounded-0" asp-items="ViewBag.ModeloEscalaId">
+                            <option value="">-- Vincular depois --</option>
+                        </select>
+                        <small class="text-muted">
+                            Você pode definir a regra de horários agora ou deixar para depois.
+                        </small>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a asp-action="Index" class="btn btn-light me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-success">Salvar Operador</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

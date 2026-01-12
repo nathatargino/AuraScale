@@ -1,0 +1,96 @@
+@model AuraScale.Models.Operador
+
+@{
+    ViewData["Title"] = "Detalhes do Operador";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+
+                <div class="card-header bg-dark text-white py-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-bold">@Model.Nome</h4>
+                            <span class="badge bg-info text-uppercase">@Model.Funcao</span>
+                        </div>
+                        <div class="ms-auto">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-light btn-sm">
+                                <i class="fa fa-edit me-1"></i> Editar Perfil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-muted text-uppercase small mb-3">Informações de Contato</h6>
+
+                            <div class="mb-3">
+                                <label class="text-muted small d-block">E-mail</label>
+                                <span class="fw-bold text-dark">@(Model.Email ?? "Não informado")</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small d-block">Horário Padrão de Entrada</label>
+                                <span class="fw-bold text-dark">
+                                    <i class="fa fa-clock me-1 text-primary"></i> @Model.HorarioEntrada.ToString(@"hh\:mm")
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 border-start ps-4">
+                            <h6 class="fw-bold text-muted text-uppercase small mb-3">Configuração de Escala</h6>
+
+                            <div class="mb-3">
+                                <label class="text-muted small d-block">Modelo Vinculado</label>
+                                @if (Model.ModeloEscala != null)
+                                {
+                                    <div class="d-flex align-items-center mt-1">
+                                        <i class="fa fa-layer-group fa-2x text-info me-3"></i>
+                                        <div>
+                                            <span class="fw-bold d-block text-dark">@Model.ModeloEscala.Nome</span>
+                                            <a asp-controller="ModelosEscala" asp-action="Details" asp-route-id="@Model.ModeloEscalaId" class="small text-decoration-none">Ver regras do modelo</a>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning py-2 px-3 rounded-3 border-0 small mt-1">
+                                        <i class="fa fa-exclamation-triangle me-2"></i> Este operador ainda não possui uma escala definida.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 opacity-25" />
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-secondary px-4">
+                            <i class="fa fa-arrow-left me-2"></i> Voltar para Lista
+                        </a>
+
+                        <div class="d-flex gap-2">
+                            <a asp-controller="Escalas" asp-action="Index" asp-route-operadorId="@Model.Id" class="btn btn-dark px-4 shadow-sm">
+                                <i class="fa fa-calendar-alt me-2 text-info"></i> Ver Agenda
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-light rounded-4 border-0">
+                <p class="mb-0 small text-muted text-center">
+                    <i class="fa fa-info-circle me-1"></i>
+                    Os horários de trabalho reais são calculados com base no <strong>Horário de Entrada</strong> acima e nas regras do <strong>Modelo de Escala</strong> selecionado.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
