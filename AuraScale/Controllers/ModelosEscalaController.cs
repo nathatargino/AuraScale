@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AuraScale.Data;
+using AuraScale.Models;
+using AuraScale.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AuraScale.Data;
-using AuraScale.Models;
 using System.Security.Claims;
 
 namespace AuraScale.Controllers
@@ -11,10 +12,12 @@ namespace AuraScale.Controllers
     public class ModelosEscalaController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly EscalaService _escalaService;
 
-        public ModelosEscalaController(ApplicationDbContext context)
+        public ModelosEscalaController(ApplicationDbContext context, EscalaService escalaService)
         {
             _context = context;
+            _escalaService = escalaService;
         }
 
         // GET: ModelosEscala
@@ -107,7 +110,7 @@ namespace AuraScale.Controllers
 
             if (modelo == null) return NotFound();
 
-            return View(modelo); // O erro acontece aqui se a View não existir
+            return View(modelo); 
         }
 
         // GET: ModelosEscala/Delete/5
@@ -131,20 +134,67 @@ namespace AuraScale.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var modelo = await _context.ModelosEscala
-                 .FirstOrDefaultAsync(m => m.Id == id && m.GerenteId == userId);
+                .Include(m => m.Operadores)
+                .FirstOrDefaultAsync(m => m.Id == id && m.GerenteId == userId);
 
             if (modelo != null)
             {
+                foreach (var op in modelo.Operadores)
+                {
+                    op.ModeloEscalaId = null;
+                }
+
                 _context.ModelosEscala.Remove(modelo);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Modelo e vínculos removidos com sucesso!";
             }
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool ModeloExists(int id)
         {
             return _context.ModelosEscala.Any(e => e.Id == id);
+        }
+
+        // POST: ModelosEscala/GerarEscala
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GerarEscala(int mes, int ano)
+        {
+            ModelState.Clear();
+            // 1. Captura o ID do Gerente Logado 
+            var gerenteId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // 2. Validação de Segurança: Se o ID for nulo, força o login
+            if (string.IsNullOrEmpty(gerenteId))
+            {
+                return Challenge();
+            }
+
+            try
+            {
+                // 3. Chama o serviço para processar a lógica 6x1
+                await _escalaService.GerarEscalaMensal(gerenteId, mes, ano);
+
+                // Usando TempData para exibir o feedback na Index.cshtml
+                TempData["Success"] = $"Sucesso! A escala de {mes}/{ano} foi gerada para sua equipe.";
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Trata especificamente erros de Banco de Dados
+                TempData["Error"] = "Erro de banco de dados: Certifique-se de que seus operadores estão vinculados corretamente ao seu perfil.";
+                // Log do erro interno para debug: dbEx.InnerException?.Message
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Ocorreu um erro inesperado: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

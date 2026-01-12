@@ -19,11 +19,16 @@ namespace AuraScale.Models
 
         public string? Observacao { get; set; }
 
+        [Required]
+        public string Tipo { get; set; } = "Trabalho";
+
         // Relacionamentos
         public int OperadorId { get; set; }
         public Operador? Operador { get; set; }
 
-        public string? GerenteId { get; set; }
+        [Required]
+        public string GerenteId { get; set; } = string.Empty;
+        
 
 
         public static TimeSpan CalcularSaida(TimeSpan entrada, DateTime data, ModeloEscala modelo)

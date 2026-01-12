@@ -23,8 +23,10 @@
                     <dd class="col-sm-8">@Html.DisplayFor(model => model.CargaHorariaDiaria)</dd>
                 </dl>
 
-                <form asp-action="Delete" class="text-end mt-3">
+                <form asp-action="Delete" method="post" class="text-end mt-3">
+                    @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="Id" />
+
                     <a asp-action="Index" class="btn btn-secondary me-2">Cancelar</a>
                     <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
                 </form>

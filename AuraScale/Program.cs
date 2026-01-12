@@ -1,21 +1,31 @@
+using AuraScale.Data;
+using AuraScale.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AuraScale.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adicionar servi�os ao cont�iner.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+// 1. Conexão e Banco
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Adicionar identidade com configura��o para exigir confirma��o de conta
+// 2. Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// 3. Política de Cookies
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.Unspecified; 
+});
+
 builder.Services.AddControllersWithViews();
 
-// Configura��o de autentica��o com o Google
+// 4. Autenticação Google
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
@@ -23,9 +33,11 @@ builder.Services.AddAuthentication()
         options.ClientSecret = builder.Configuration["Google:ClientSecret"];
     });
 
+builder.Services.AddScoped<EscalaService>();
+
 var app = builder.Build();
 
-// Configurar o pipeline de requisi��es HTTP.
+// Pipeline:
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -37,13 +49,14 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(); 
+
 app.UseRouting();
 
-// Adicionando autentica��o ao pipeline HTTP
+// 5. CORREÇÃO: Ordem do Middleware
+app.UseCookiePolicy(); 
 app.UseAuthentication();
-app.UseAuthorization();   
-
-app.UseStaticFiles();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

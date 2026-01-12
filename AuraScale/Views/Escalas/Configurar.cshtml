@@ -1,7 +1,21 @@
 ﻿@{
     ViewData["Title"] = "Configurar Geração";
 }
+@if (TempData["Mensagem"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <i class="fa fa-check-circle me-2"></i> @TempData["Mensagem"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
+@if (TempData["Erro"] != null || ViewBag.Error != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <i class="fa fa-exclamation-triangle me-2"></i> @(TempData["Erro"] ?? ViewBag.Error)
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 <div class="row justify-content-center">
     <div class="col-md-5">
         <div class="card shadow border-0 rounded-4 mt-5">
@@ -12,6 +26,7 @@
                 <p class="text-muted mb-4">Selecione o período que deseja escalar para toda a sua equipe.</p>
 
                 <form asp-action="Gerar" method="post">
+                    @Html.AntiForgeryToken()
                     <div class="row g-3">
                         <div class="col-md-6 text-start">
                             <label class="form-label fw-bold small text-uppercase">Data de Início</label>

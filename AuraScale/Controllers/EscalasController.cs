@@ -83,8 +83,9 @@ namespace AuraScale.Controllers
             }
 
             // B) Limpa escalas antigas nesse período para não duplicar
-            var escalasAntigas = _context.Escalas
-            .Where(e => e.Data >= dataInicio && e.Data <= dataFim && e.GerenteId == userId);
+            var escalasAntigas = await _context.Escalas
+           .Where(e => e.Data >= dataInicio && e.Data <= dataFim && e.GerenteId == userId)
+           .ToListAsync(); 
 
             _context.Escalas.RemoveRange(escalasAntigas);
             await _context.SaveChangesAsync();
