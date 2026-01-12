@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
@@ -9,6 +13,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
+    @if (ViewData["HideNavbar"] == null)
+    {
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark shadow-lg"
              style="background: linear-gradient(135deg, rgba(30, 30, 40, 0.95) 0%, rgba(50, 40, 80, 0.90) 100%); backdrop-filter: blur(10px);">
@@ -24,25 +30,27 @@
 
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto ms-lg-4">
-                        <li class="nav-item mx-lg-1">
-                            <a class="nav-link px-3 rounded" asp-controller="Home" asp-action="Index">
-                                <i class="fa-solid fa-house me-1" style="color: #ced4da;"></i> Início
-                            </a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                            {
+                                <li class="nav-item mx-lg-1">
+                                    <a class="nav-link px-3 rounded" asp-controller="Home" asp-action="Index">
+                                        <i class="fa-solid fa-house me-1" style="color: #ced4da;"></i> Início
+                                    </a>
+                                </li>
 
-                        <li class="nav-item mx-lg-1">
-                            <a class="nav-link px-3 rounded" asp-controller="Operadores" asp-action="Index">
-                                <i class="fa fa-users me-1"></i> Equipe
-                            </a>
-                        </li>
+                                <li class="nav-item mx-lg-1">
+                                    <a class="nav-link px-3 rounded" asp-controller="Operadores" asp-action="Index">
+                                        <i class="fa fa-users me-1"></i> Equipe
+                                    </a>
+                                </li>
 
-                        <li class="nav-item mx-lg-1">
-                            <a class="nav-link px-3 rounded" asp-controller="ModelosEscala" asp-action="Index">
-                                <i class="fa fa-cogs me-1"></i> Modelos
-                            </a>
-                        </li>
-                    </ul>
-
+                                <li class="nav-item mx-lg-1">
+                                    <a class="nav-link px-3 rounded" asp-controller="ModelosEscala" asp-action="Index">
+                                        <i class="fa fa-cogs me-1"></i> Modelos
+                                    </a>
+                                </li>
+                            }
+                        </ul>
                     <ul class="navbar-nav ms-auto align-items-center">
                         <partial name="_LoginPartial" />
                     </ul>
@@ -50,6 +58,7 @@
             </div>
         </nav>
     </header>
+    }
 
     <div class="container mt-4">
         <main role="main" class="pb-3">
@@ -57,11 +66,14 @@
         </main>
     </div>
 
+    @if (ViewData["HideNavbar"] == null)
+    {
     <footer class="border-top footer text-muted mt-5 py-3 text-center">
         <div class="container">
             &copy; 2026 - AuraScale - Gestão Inteligente de Escalas
         </div>
     </footer>
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

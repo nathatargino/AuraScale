@@ -4,18 +4,18 @@ using AuraScale.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adicionar serviços ao contêiner.
+// Adicionar serviï¿½os ao contï¿½iner.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Adicionar identidade com configuração para exigir confirmação de conta
+// Adicionar identidade com configuraï¿½ï¿½o para exigir confirmaï¿½ï¿½o de conta
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-// Configuração de autenticação com o Google
+// Configuraï¿½ï¿½o de autenticaï¿½ï¿½o com o Google
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
@@ -25,7 +25,7 @@ builder.Services.AddAuthentication()
 
 var app = builder.Build();
 
-// Configurar o pipeline de requisições HTTP.
+// Configurar o pipeline de requisiï¿½ï¿½es HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -39,7 +39,7 @@ else
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// Adicionando autenticação ao pipeline HTTP
+// Adicionando autenticaï¿½ï¿½o ao pipeline HTTP
 app.UseAuthentication();
 app.UseAuthorization();   
 
