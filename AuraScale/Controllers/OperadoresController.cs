@@ -193,49 +193,50 @@ namespace AuraScale.Controllers
                         var worksheet = workbook.Worksheets.First();
                         var rows = worksheet.RangeUsed().RowsUsed().Skip(1);
 
-                        // Carrega modelos existentes em memória para evitar SELECTs repetitivos
                         var modelosCache = await _context.ModelosEscala
                             .Where(m => m.GerenteId == userId)
                             .ToListAsync();
 
                         foreach (var row in rows)
                         {
-                            var nome = row.Cell(1).GetValue<string>();
-                            var email = row.Cell(2).GetValue<string>();
-                            var funcao = row.Cell(3).GetValue<string>();
-                            var entradaStr = row.Cell(4).GetValue<string>();
+                            // DECLARAÇÃO DAS VARIÁVEIS (Resolve o erro "não existe no contexto")
+                            var nome = row.Cell(1).GetValue<string>()?.Trim();
+                            var email = row.Cell(2).GetValue<string>()?.Trim();
+                            var funcao = row.Cell(3).GetValue<string>()?.Trim();
+                            var entradaStr = row.Cell(4).GetValue<string>()?.Trim();
                             var nomeModeloExcel = row.Cell(5).GetValue<string>()?.Trim();
 
+                            // Pula linhas vazias
                             if (string.IsNullOrWhiteSpace(nome)) continue;
 
-                            // 1. Lógica Get or Create para o Modelo de Escala
                             int? modeloId = null;
                             if (!string.IsNullOrEmpty(nomeModeloExcel))
                             {
                                 var modelo = modelosCache.FirstOrDefault(m =>
-                                    m.Nome.Equals(nomeModeloExcel, StringComparison.OrdinalIgnoreCase));
+                                    string.Equals(m.Nome.Replace("[REVISAR] ", ""), nomeModeloExcel, StringComparison.OrdinalIgnoreCase));
 
                                 if (modelo == null)
                                 {
-                                    // Cria um modelo novo "rascunho" se não existir
                                     modelo = new ModeloEscala
                                     {
                                         Nome = "[REVISAR] " + nomeModeloExcel,
-                                        GerenteId = userId,
+                                        GerenteId = userId!, // O '!' diz ao C# que sabemos que não é nulo
                                         CargaHorariaDiaria = TimeSpan.FromHours(8),
                                         RegraSabado = TipoTrabalhoSabado.NaoTrabalha
                                     };
-                                    _context.ModelosEscala.Add(modelo);
-                                    await _context.SaveChangesAsync(); 
 
-                                    modelosCache.Add(modelo); // Adiciona no cache da memória
+                                    _context.ModelosEscala.Add(modelo);
+                                    await _context.SaveChangesAsync();
+                                    modelosCache.Add(modelo);
                                 }
                                 modeloId = modelo.Id;
                             }
 
-                            // 2. Tenta adicionar o Operador
+                            // Conversão segura do horário
                             var horario = TimeSpan.TryParse(entradaStr, out var t) ? t : TimeSpan.FromHours(8);
-                            bool adicionou = await ProcessarOperador(nome, email, funcao, userId, modeloId, horario);
+
+                            // Chama o método auxiliar usando as variáveis declaradas acima
+                            bool adicionou = await ProcessarOperador(nome, email, funcao ?? "Operador", userId!, modeloId, horario);
 
                             if (adicionou) countNovos++;
                         }

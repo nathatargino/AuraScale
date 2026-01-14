@@ -1,0 +1,35 @@
+﻿@page
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Finalizar Cadastro";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-header bg-dark text-white py-3 border-0 rounded-top-4 text-center">
+                <h5 class="mb-0 fw-bold"><i class="fab fa-google me-2 text-danger"></i> Quase lá!</h5>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted text-center">
+                    Você se autenticou com o <strong>@Model.ProviderDisplayName</strong>.
+                    Confirme seu e-mail para criar sua conta no <strong>AuraScale</strong>.
+                </p>
+
+                <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="All" class="text-danger small"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Email" class="form-control rounded-3" placeholder="nome@exemplo.com" />
+                        <label asp-for="Input.Email">Endereço de E-mail</label>
+                        <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill fw-bold shadow-sm">
+                        CONCLUIR CADASTRO
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

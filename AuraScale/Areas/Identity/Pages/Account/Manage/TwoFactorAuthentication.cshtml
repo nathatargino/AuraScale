@@ -1,0 +1,111 @@
+﻿@page
+@using Microsoft.AspNetCore.Http.Features
+@model TwoFactorAuthenticationModel
+@{
+    ViewData["Title"] = "Autenticação de Dois Fatores (2FA)";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<div class="container-fluid p-0">
+    <div class="card shadow-sm border-0 rounded-4 bg-transparent">
+        <div class="card-header bg-dark text-white py-4 px-4 border-0 rounded-top-4">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="fa fa-shield-alt fa-lg text-white"></i>
+                </div>
+                <div class="ms-3">
+                    <h4 class="mb-0 fw-bold">Segurança Reforçada</h4>
+                    <p class="mb-0 opacity-75 small">Proteja sua conta com uma camada extra de verificação</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5 pt-2 pt-md-3">
+            <partial name="_StatusMessage" for="StatusMessage" />
+
+            @if (Model.Is2faEnabled)
+            {
+                <h6 class="fw-bold text-muted text-uppercase mt-0 mb-3 small" style="letter-spacing: 1px;">Configurações Ativas</h6>
+
+                @if (Model.RecoveryCodesLeft == 0)
+                {
+                    <div class="alert alert-danger border-0 rounded-4 shadow-sm mb-3">
+                        <i class="fa fa-exclamation-circle me-2"></i>
+                        <strong>Você não tem códigos de recuperação.</strong> Gere novos códigos antes de perder o acesso.
+                    </div>
+                }
+                else if (Model.RecoveryCodesLeft <= 3)
+                {
+                    <div class="alert alert-warning border-0 rounded-4 shadow-sm mb-3">
+                        <i class="fa fa-exclamation-triangle me-2"></i>
+                        Você tem apenas @Model.RecoveryCodesLeft códigos de recuperação restantes.
+                    </div>
+                }
+
+                <div class="d-grid gap-2 d-md-block">
+                    <a asp-page="./GenerateRecoveryCodes" class="btn btn-outline-dark rounded-pill px-4 fw-bold shadow-sm">Resetar Códigos</a>
+                    <a asp-page="./Disable2fa" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm">Desativar 2FA</a>
+                </div>
+            }
+
+            <h6 class="fw-bold text-muted text-uppercase mt-4 mb-3 small" style="letter-spacing: 1px;">
+                Aplicativo de Autenticação
+            </h6>
+
+            <div class="p-1 rounded-4 shadow-sm"
+                 style="background-color: rgba(255, 255, 255, 0.2) !important;
+                        backdrop-filter: blur(12px);
+                        -webkit-backdrop-filter: blur(12px);
+                        border: 1px solid rgba(255, 255, 255, 0.3);">
+
+                <div class="card-body p-4">
+                    @if (!Model.HasAuthenticator)
+                    {
+                        <div class="text-center py-3">
+                            <div class="mb-3">
+                                <i class="fa fa-mobile-alt fa-3x text-primary opacity-50"></i>
+                            </div>
+                            <h5 class="fw-bold text-dark">Nenhum app configurado</h5>
+                            <p class="text-secondary small mb-4">
+                                Use aplicativos como Google Authenticator ou Microsoft Authenticator <br class="d-none d-md-block">
+                                para gerar códigos de segurança temporários.
+                            </p>
+                            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">
+                                <i class="fa fa-qrcode me-2"></i> CONFIGURAR AGORA
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-7">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                                         style="width: 48px; height: 48px; min-width: 48px; background-color: rgba(25, 135, 84, 0.2) !important;">
+                                        <i class="fa fa-check text-success"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-1 fw-bold text-dark">App de Autenticação Ativo</h6>
+                                        <p class="mb-0 text-muted small">Sua conta está protegida por códigos temporários.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5 text-md-end">
+
+                                <div class="d-flex flex-wrap justify-content-md-end gap-2">
+
+                                    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-outline-success btn-sm rounded-pill px-3 fw-bold shadow-sm border">
+                                        <i class="fa fa-sync-alt me-1 text-primary"></i> Adicionar
+                                    </a>
+                                    <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold shadow-sm border">
+                                        <i class="fa fa-undo me-1"></i> Resetar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+﻿@page
+@model PersonalDataModel
+@{
+    ViewData["Title"] = "Dados Pessoais";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<div class="container-fluid p-0">
+    <div class="card shadow-sm border-0 rounded-4 bg-transparent">
+        <div class="card-header bg-dark text-white py-4 px-4 border-0 rounded-top-4">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="fa fa-user-shield fa-lg text-white"></i>
+                </div>
+                <div class="ms-3">
+                    <h4 class="mb-0 fw-bold">Privacidade e Exportação</h4>
+                    <p class="mb-0 opacity-75 small">Gerencie como seus dados são tratados no AuraScale</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5 pt-2 pt-md-3">
+            
+            <h6 class="fw-bold text-muted text-uppercase mt-0 mb-3 small" style="letter-spacing: 1px;">Seus Dados</h6>
+
+            <div class="p-4 rounded-4 shadow-sm mb-4"
+                 style="background-color: rgba(255, 255, 255, 0.3) !important;
+                        backdrop-filter: blur(10px);
+                        -webkit-backdrop-filter: blur(10px);
+                        border: 1px solid rgba(255, 255, 255, 0.4);">
+
+                <p class="text-secondary mb-4">
+                    Sua conta no AuraScale contém informações pessoais (e-mail, telefone e histórico de escalas).
+                    Você tem o direito de baixar uma cópia desses dados em formato JSON ou solicitar a exclusão total.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <form id="download-data" asp-page="DownloadPersonalData" method="post">
+                        <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" type="submit">
+                            <i class="fa fa-download me-2"></i> BAIXAR MEUS DADOS
+                        </button>
+                    </form>
+
+                    <a id="delete" asp-page="DeletePersonalData" class="btn btn-outline-danger rounded-pill px-4 fw-bold">
+                        <i class="fa fa-trash-alt me-2"></i> EXCLUIR CONTA
+                    </a>
+                </div>
+            </div>
+
+            <div class="alert alert-light border-0 rounded-4 small text-muted shadow-sm py-3">
+                <i class="fa fa-info-circle me-2 text-primary"></i>
+                <strong>Importante:</strong> Ao excluir sua conta, todos os seus <strong>Operadores</strong> e <strong>Modelos de Escala</strong> serão removidos permanentemente do nosso banco de dados.
+            </div>
+        </div>
+    </div>
+</div>

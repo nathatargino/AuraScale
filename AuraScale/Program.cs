@@ -13,24 +13,38 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // 2. Identity
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => {
+    options.SignIn.RequireConfirmedAccount = false; 
+    options.SignIn.RequireConfirmedEmail = false;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
-// 3. Política de Cookies
-builder.Services.Configure<CookiePolicyOptions>(options =>
+// 3. Configuração de Cookies 
+builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.CheckConsentNeeded = context => true;
-    options.MinimumSameSitePolicy = SameSiteMode.Unspecified; 
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+
+    // Redirecionamento para dashboard
+    options.Events.OnRedirectToReturnUrl = context =>
+    {
+        if (context.Response.StatusCode == 200 && context.Request.Path.Value.Contains("/Account/ExternalLogin"))
+        {
+            context.Response.Redirect("/Home/Dashboard");
+        }
+        return Task.CompletedTask;
+    };
 });
 
-builder.Services.AddControllersWithViews();
-
-// 4. Autenticação Google
+// 4. Autenticação Google com Persistência
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+        options.ClientId = builder.Configuration["Google:ClientId"]!;
+        options.ClientSecret = builder.Configuration["Google:ClientSecret"]!;
+        options.SaveTokens = true;
     });
 
 builder.Services.AddScoped<EscalaService>();
@@ -53,7 +67,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// 5. CORREÇÃO: Ordem do Middleware
+// 5.Middleware
 app.UseCookiePolicy(); 
 app.UseAuthentication();
 app.UseAuthorization();

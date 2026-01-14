@@ -37,6 +37,7 @@
                     </div>
 
                     <form asp-action="Importar" enctype="multipart/form-data" method="post">
+                        [ValidateAntiForgeryToken]
                         <div class="mb-4">
                             <label class="form-label fw-bold small text-uppercase text-muted">Arquivo Excel (.xlsx)</label>
                             <input type="file" name="arquivoExcel" class="form-control rounded-3" accept=".xlsx" required />

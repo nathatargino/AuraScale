@@ -1,0 +1,90 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@model ExternalLoginsModel
+@{
+    ViewData["Title"] = "Contas Vinculadas";
+    ViewData["ActivePage"] = ManageNavPages.ExternalLogins;
+}
+
+<div class="container-fluid p-0">
+    <div class="card shadow-sm border-0 rounded-4 bg-transparent">
+        <div class="card-header bg-dark text-white py-4 px-4 border-0 rounded-top-4">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="fab fa-google fa-lg text-white"></i>
+                </div>
+                <div class="ms-3">
+                    <h4 class="mb-0 fw-bold">Logins Externos</h4>
+                    <p class="mb-0 opacity-75 small">Gerencie conexões com Google e outros provedores</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5 pt-2 pt-md-3">
+            <partial name="_StatusMessage" for="StatusMessage" />
+
+            <div class="mt-4">
+                @if (Model.CurrentLogins?.Count > 0)
+                {
+                    <h6 class="fw-bold text-muted text-uppercase mb-3 small">Logins Configurados</h6>
+
+                    @foreach (var login in Model.CurrentLogins)
+                    {
+                        <div class="d-flex align-items-center justify-content-between p-3 mb-3 rounded-4 shadow-sm"
+                             style="background-color: rgba(255, 255, 255, 0.2) !important;
+                                backdrop-filter: blur(10px);
+                                -webkit-backdrop-filter: blur(10px);
+                                border: 1px solid rgba(255, 255, 255, 0.3);">
+
+                            <div class="d-flex align-items-center">
+                                <div class="bg-white rounded-circle p-2 shadow-sm me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fab fa-google text-danger"></i>
+                                </div>
+                                <span class="fw-bold @(Model.ShowRemoveButton ? "text-dark" : "text-muted")">
+                                    @login.ProviderDisplayName
+                                </span>
+                            </div>
+
+                            <div>
+                                <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
+                                    <input value="@login.LoginProvider" name="LoginProvider" type="hidden" />
+                                    <input value="@login.ProviderKey" name="ProviderKey" type="hidden" />
+
+                                    <button type="submit"
+                                            class="btn btn-sm rounded-pill px-4 fw-bold @(Model.ShowRemoveButton ? "btn-outline-danger" : "btn-light opacity-50")"
+                                            @(Model.ShowRemoveButton ? "" : "disabled")>
+                                        <i class="fa fa-trash-alt me-1"></i> Remover
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!Model.ShowRemoveButton)
+                    {
+                        <p class="text-center small text-muted mt-2">
+                            <i class="fa fa-lock me-1"></i> Login principal protegido
+                        </p>
+                    }
+                }
+            </div>
+
+            @if (Model.OtherLogins?.Count > 0)
+            {
+                <div class="mt-4 pt-4 border-top">
+                    <h6 class="fw-bold text-muted text-uppercase mb-3 small">Adicionar outro serviço</h6>
+                    <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="form-horizontal">
+                        <div id="socialLoginList">
+                            @foreach (var provider in Model.OtherLogins)
+                            {
+                                <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-outline-dark rounded-pill px-4 shadow-sm fw-bold" name="provider" value="@provider.Name">
+                                    <i class="fab fa-google me-2"></i> Conectar @provider.DisplayName
+                                </button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>
