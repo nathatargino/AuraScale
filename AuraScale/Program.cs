@@ -49,6 +49,13 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddScoped<EscalaService>();
 
+// 1. Serviços de localização
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
+
 var app = builder.Build();
 
 // Pipeline:
