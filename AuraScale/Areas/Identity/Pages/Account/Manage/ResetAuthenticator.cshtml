@@ -1,0 +1,46 @@
+﻿@page
+@model ResetAuthenticatorModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Resetar chave do autenticador"];
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<div class="container-fluid p-0">
+    <div class="card shadow-sm border-0 rounded-4 bg-transparent border-danger">
+        <div class="card-header bg-danger text-white py-4 px-4 border-0 rounded-top-4">
+            <div class="d-flex align-items-center">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="fa fa-exclamation-triangle fa-lg text-danger"></i>
+                </div>
+                <div class="ms-3">
+                    <h4 class="mb-0 fw-bold">@Localizer["Resetar Chave de Autenticação"]</h4>
+                    <p class="mb-0 opacity-100 small">@Localizer["Atenção: Esta ação desativará seu app atual"]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <div class="alert alert-warning border-0 shadow-sm rounded-4 mb-4">
+                <p class="mb-0">
+                    <i class="fa fa-info-circle me-2"></i>
+                    <strong>@Localizer["O que acontece se eu resetar?"]</strong><br />
+                    @Localizer["Se você resetar sua chave, seu aplicativo autenticador atual parará de funcionar até que você o reconfigure."]
+                </p>
+            </div>
+
+            <p class="text-muted">
+                @Localizer["Este processo desativa o 2FA até que você complete a nova configuração."]
+            </p>
+
+            <form id="reset-authenticator-form" method="post">
+                <div class="mt-4 pt-4 border-top d-flex justify-content-end">
+                    <button id="reset-authenticator-button" type="submit" class="btn btn-danger btn-lg px-4 rounded-pill fw-bold shadow-sm">
+                        @Localizer["RESETAR CHAVE AGORA"]
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -2,6 +2,8 @@ using AuraScale.Data;
 using AuraScale.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // 2. Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => {
-    options.SignIn.RequireConfirmedAccount = false; 
+    options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -27,7 +29,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Identity/Account/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 
-    // Redirecionamento para dashboard
     options.Events.OnRedirectToReturnUrl = context =>
     {
         if (context.Response.StatusCode == 200 && context.Request.Path.Value.Contains("/Account/ExternalLogin"))
@@ -38,7 +39,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
-// 4. Autenticação Google com Persistência
+// 4. Autenticação Google
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
@@ -49,7 +50,7 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddScoped<EscalaService>();
 
-// 1. Serviços de localização
+// --- LOCALIZAÇÃO ---
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddControllersWithViews()
@@ -57,6 +58,13 @@ builder.Services.AddControllersWithViews()
     .AddDataAnnotationsLocalization();
 
 var app = builder.Build();
+
+// --- CONFIGURAÇÃO DE CULTURAS ---
+var supportedCultures = new[] { "pt-BR", "en-US" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture("pt-BR") 
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
 
 // Pipeline:
 if (app.Environment.IsDevelopment())
@@ -70,12 +78,14 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); 
+app.UseStaticFiles();
 
 app.UseRouting();
 
-// 5.Middleware
-app.UseCookiePolicy(); 
+// 5. Middleware 
+app.UseRequestLocalization(localizationOptions); 
+
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 

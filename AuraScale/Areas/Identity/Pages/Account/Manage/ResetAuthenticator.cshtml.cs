@@ -8,22 +8,25 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Localization; // Necessário para tradução
 
 namespace AuraScale.Areas.Identity.Pages.Account.Manage
 {
-    public class Disable2faModel : PageModel
+    public class ResetAuthenticatorModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly ILogger<Disable2faModel> _logger;
-        private readonly IStringLocalizer<Disable2faModel> _localizer; 
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ILogger<ResetAuthenticatorModel> _logger;
+        private readonly IStringLocalizer<ResetAuthenticatorModel> _localizer; 
 
-        public Disable2faModel(
+        public ResetAuthenticatorModel(
             UserManager<IdentityUser> userManager,
-            ILogger<Disable2faModel> logger,
-            IStringLocalizer<Disable2faModel> localizer) 
+            SignInManager<IdentityUser> signInManager,
+            ILogger<ResetAuthenticatorModel> logger,
+            IStringLocalizer<ResetAuthenticatorModel> localizer) 
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _logger = logger;
             _localizer = localizer;
         }
@@ -39,11 +42,6 @@ namespace AuraScale.Areas.Identity.Pages.Account.Manage
                 return NotFound(_localizer["Unable to load user with ID '{0}'.", _userManager.GetUserId(User)]);
             }
 
-            if (!await _userManager.GetTwoFactorEnabledAsync(user))
-            {
-                throw new InvalidOperationException(_localizer["Cannot disable 2FA for user as it's not currently enabled."]);
-            }
-
             return Page();
         }
 
@@ -55,18 +53,17 @@ namespace AuraScale.Areas.Identity.Pages.Account.Manage
                 return NotFound(_localizer["Unable to load user with ID '{0}'.", _userManager.GetUserId(User)]);
             }
 
-            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
-            if (!disable2faResult.Succeeded)
-            {
-                throw new InvalidOperationException(_localizer["Unexpected error occurred disabling 2FA."]);
-            }
+            await _userManager.SetTwoFactorEnabledAsync(user, false);
+            await _userManager.ResetAuthenticatorKeyAsync(user);
+            var userId = await _userManager.GetUserIdAsync(user);
+            _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", userId);
 
-            _logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));
+            await _signInManager.RefreshSignInAsync(user);
 
-            // Mensagem que será enviada para a página de redirecionamento
-            StatusMessage = _localizer["2fa has been disabled. You can reenable 2fa when you setup an authenticator app"];
+            // AQUI ESTÁ A MENSAGEM TRADUZIDA
+            StatusMessage = _localizer["Your authenticator app key has been reset, you will need to configure your authenticator app using the new key."];
 
-            return RedirectToPage("./TwoFactorAuthentication");
+            return RedirectToPage("./EnableAuthenticator");
         }
     }
 }

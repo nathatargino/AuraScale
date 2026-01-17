@@ -1,0 +1,72 @@
+﻿@page
+@model ShowRecoveryCodesModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Códigos de Recuperação"];
+    ViewData["ActivePage"] = "TwoFactorAuthentication";
+}
+
+<div class="container-fluid p-0">
+    <div class="card shadow-sm border-0 rounded-4 bg-transparent border-primary">
+        <div class="card-header bg-dark text-white py-4 px-4 border-0 rounded-top-4">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="fa fa-save fa-lg text-white"></i>
+                </div>
+                <div class="ms-3">
+                    <h4 class="mb-0 fw-bold">@Localizer["Guarde seus códigos"]</h4>
+                    <p class="mb-0 opacity-75 small">@Localizer["Última barreira de segurança da sua conta"]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <partial name="_StatusMessage" for="StatusMessage" />
+
+            <div class="alert alert-danger border-0 shadow-sm rounded-4 mb-4">
+                <p class="mb-0">
+                    <i class="fa fa-exclamation-circle me-2"></i>
+                    <strong>@Localizer["Mantenha estes códigos em um local seguro."]</strong><br />
+                    @Localizer["Se você perder seu dispositivo e não tiver esses códigos, você não conseguirá acessar sua conta no AuraScale."]
+                </p>
+            </div>
+
+            <div class="row g-3 mb-4">
+                @for (var row = 0; row < Model.RecoveryCodes.Length; row += 2)
+                {
+                    <div class="col-6 col-md-4">
+                        <div class="bg-light p-3 rounded border text-center font-monospace shadow-sm" style="letter-spacing: 1px; color: #495057;">
+                            <code>@Model.RecoveryCodes[row]</code>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="bg-light p-3 rounded border text-center font-monospace shadow-sm" style="letter-spacing: 1px; color: #495057;">
+                            <code>@Model.RecoveryCodes[row + 1]</code>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
+                <button onclick="window.print()" class="btn btn-outline-dark btn-lg px-4 rounded-pill fw-bold">
+                    <i class="fa fa-print me-2"></i> @Localizer["Imprimir códigos"]
+                </button>
+                <button onclick="copyCodes()" class="btn btn-primary btn-lg px-4 rounded-pill fw-bold shadow-sm">
+                    <i class="fa fa-copy me-2"></i> @Localizer["Copiar códigos"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function copyCodes() {
+            const codes = "@(string.Join("\\n", Model.RecoveryCodes))";
+            navigator.clipboard.writeText(codes).then(() => {
+                alert("@Localizer["Códigos copiados para a área de transferência!"]");
+            });
+        }
+    </script>
+}

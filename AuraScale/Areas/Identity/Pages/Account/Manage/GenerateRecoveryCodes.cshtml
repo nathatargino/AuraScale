@@ -1,0 +1,49 @@
+﻿@page
+@model GenerateRecoveryCodesModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Gerar códigos de recuperação"];
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<div class="container-fluid p-0">
+    <div class="card shadow-sm border-0 rounded-4 bg-transparent border-warning">
+        <div class="card-header bg-warning text-dark py-4 px-4 border-0 rounded-top-4">
+            <div class="d-flex align-items-center">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="fa fa-key fa-lg text-warning"></i>
+                </div>
+                <div class="ms-3">
+                    <h4 class="mb-0 fw-bold">@Localizer["Códigos de Recuperação"]</h4>
+                    <p class="mb-0 opacity-75 small text-dark">@Localizer["Proteja o seu acesso ao AuraScale"]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <partial name="_StatusMessage" for="StatusMessage" />
+
+            <div class="alert alert-warning border-0 shadow-sm rounded-4 mb-4">
+                <p class="mb-0">
+                    <i class="fa fa-exclamation-triangle me-2"></i>
+                    <strong>@Localizer["Guarde estes códigos em um local seguro!"]</strong><br />
+                    @Localizer["Se você perder seu dispositivo e não tiver os códigos de recuperação, você perderá o acesso à sua conta."]
+                </p>
+            </div>
+
+            <p class="text-muted mb-4">
+                @Localizer["Gerar novos códigos de recuperação não altera a chave usada no seu aplicativo autenticador. Se você deseja alterar a chave do app, você deve"]
+                <a asp-page="./ResetAuthenticator" class="text-primary fw-bold text-decoration-none">@Localizer["resetar suas chaves de autenticação."]</a>
+            </p>
+
+            <form method="post">
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-danger btn-lg px-4 rounded-pill fw-bold shadow-sm" type="submit">
+                        <i class="fa fa-sync-alt me-2"></i> @Localizer["GERAR NOVOS CÓDIGOS"]
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
