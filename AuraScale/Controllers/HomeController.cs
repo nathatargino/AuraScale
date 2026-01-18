@@ -29,20 +29,20 @@ namespace AuraScale.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
 
-            // 1. Verifica se ele JÁ É um Operador vinculado pelo ID
+            // 1. Verifica se ele Jï¿½ ï¿½ um Operador vinculado pelo ID
             var ehColaborador = await _context.Operadores.AnyAsync(o => o.UsuarioId == userId);
 
-            // 2. Se não for pelo ID, tenta vincular agora pelo EMAIL 
+            // 2. Se nï¿½o for pelo ID, tenta vincular agora pelo EMAIL 
             if (!ehColaborador && !string.IsNullOrEmpty(userEmail))
             {
-                var operadorPendente = await _context.Operadores
-                    .FirstOrDefaultAsync(o => o.Email == userEmail && o.UsuarioId == null);
+                var operadorPorEmail = await _context.Operadores
+                    .FirstOrDefaultAsync(o => o.Email == userEmail);
 
-                if (operadorPendente != null)
+                if (operadorPorEmail != null)
                 {
-                    // Faz o vínculo automático agora!
-                    operadorPendente.UsuarioId = userId;
-                    _context.Update(operadorPendente);
+                    // Faz o vï¿½nculo automï¿½tico agora!
+                    operadorPorEmail.UsuarioId = userId;
+                    _context.Update(operadorPorEmail);
                     await _context.SaveChangesAsync();
                     ehColaborador = true;
                 }
@@ -66,13 +66,31 @@ namespace AuraScale.Controllers
         public async Task<IActionResult> Dashboard()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
 
+            // Verifica se Ã© colaborador pelo ID
             bool ehColaborador = await _context.Operadores.AnyAsync(o => o.UsuarioId == userId);
+            
+            // Se nÃ£o for pelo ID, verifica pelo email
+            if (!ehColaborador && !string.IsNullOrEmpty(userEmail))
+            {
+                var operadorPorEmail = await _context.Operadores
+                    .FirstOrDefaultAsync(o => o.Email == userEmail);
+
+                if (operadorPorEmail != null)
+                {
+                    operadorPorEmail.UsuarioId = userId;
+                    _context.Update(operadorPorEmail);
+                    await _context.SaveChangesAsync();
+                    ehColaborador = true;
+                }
+            }
+
             if (ehColaborador) return RedirectToAction("Index", "Colaborador");
 
             var hoje = DateTime.Today;
 
-            // Estatísticas Simplificadas
+            // Estatï¿½sticas Simplificadas
             ViewBag.TotalOperadores = await _context.Operadores.CountAsync(o => o.GerenteId == userId);
             ViewBag.TotalModelos = await _context.ModelosEscala.CountAsync(m => m.GerenteId == userId);
             ViewBag.TrabalhandoHoje = await _context.Escalas

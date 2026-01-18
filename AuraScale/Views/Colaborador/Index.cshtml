@@ -1,0 +1,151 @@
+@model AuraScale.Models.Operador
+
+@{
+    ViewData["EsconderMenuGerente"] = true;
+    ViewData["Title"] = "Minha Escala";
+    
+    var escalas = (List<AuraScale.Models.Escala>)ViewBag.Escalas ?? new List<AuraScale.Models.Escala>();
+    var inicioSemana = ViewBag.InicioSemana != null ? (DateTime)ViewBag.InicioSemana : DateTime.Today;
+    var fimSemana = ViewBag.FimSemana != null ? (DateTime)ViewBag.FimSemana : DateTime.Today;
+    
+    // Dias da semana para o cabeçalho
+    var diasSemana = new List<DateTime>();
+    for (int i = 0; i < 7; i++) { diasSemana.Add(inicioSemana.AddDays(i)); }
+}
+
+
+
+
+<div class="container py-5">
+    <div class="card shadow border-1 rounded-1">
+        <div class="card-header bg-dark text-white py-3 rounded-1">
+            <h3 class="mb-0"><i class="fa fa-id-card me-2"></i> Área do Colaborador</h3>
+        </div>
+        <div class="card-body p-4">
+            <div class="alert alert-success rounded-1 border-0 shadow-sm">
+                <h4 class="alert-heading fw-bold">Olá, @Model.Nome!</h4>
+                <p class="mb-0">O sistema identificou seu cadastro através do e-mail: <strong>@Model.Email</strong>.</p>
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="row">
+                <div class="col-md-6 ">
+                    <h5 class="text-muted fw-bold mb-3">Seus Dados</h5>
+                    <ul class="list-group list-group-flush border shadow-sm rounded-1">
+                        <li class="list-group-item"><strong>Função:</strong> @Model.Funcao</li>
+                        <li class="list-group-item"><strong>Horário Base de Entrada:</strong> @Model.HorarioEntrada.ToString(@"hh\:mm")</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-muted fw-bold mb-3">Sua Regra de Escala</h5>
+                    @if (Model.ModeloEscala != null)
+                    {
+                        <div class="card bg-light border-1 rounded-1 shadow-sm">
+                            <div class="card-body text-center py-4">
+                                <h2 class="text-dark fw-bold mb-3">@Model.ModeloEscala.Nome</h2>
+                                <p class="mb-3 fs-5">Carga Diária (Seg-Sex): <strong>@Model.ModeloEscala.CargaHorariaDiaria.ToString(@"hh\:mm")</strong></p>
+
+                                <div class="d-flex flex-column gap-2">
+                                    <span class="badge bg-dark p-2 fs-6 rounded-1">
+                                        <i class="fa fa-calendar-day me-1"></i>
+                                        Sábado: @Html.DisplayFor(m => m.ModeloEscala.RegraSabado)
+                                    </span>
+
+                                    <span class="badge @(Model.ModeloEscala.TrabalhaDomingo ? "bg-success" : "bg-danger") p-2 fs-6 rounded-1">
+                                        <i class="fa fa-sun me-1"></i>
+                                        @(Model.ModeloEscala.TrabalhaDomingo ? "Trabalha aos Domingos" : "Folga aos Domingos")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning rounded-0 border-1">
+                            <i class="fa fa-clock me-2"></i> Você ainda não foi vinculado a nenhuma regra de escala pelo seu gerente.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Escala Semanal -->
+    <div class="card shadow border-1 rounded-1 mt-4">
+        <div class="card-header bg-primary text-white py-3 rounded-1">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0"><i class="fa fa-calendar-alt me-2"></i> Minha Escala Semanal</h3>
+                <div class="btn-group">
+                    <a href="@Url.Action("Index", "Colaborador", new { dataRef = inicioSemana.AddDays(-7).ToString("yyyy-MM-dd") })" class="btn btn-sm btn-dark">
+                        <i class="fa fa-chevron-left"></i> Anterior
+                    </a>
+                    <a href="@Url.Action("Index", "Colaborador", new { dataRef = DateTime.Today.ToString("yyyy-MM-dd") })" class="btn btn-sm btn-dark">
+                        Hoje
+                    </a>
+                    <a href="@Url.Action("Index", "Colaborador", new { dataRef = inicioSemana.AddDays(7).ToString("yyyy-MM-dd") })" class="btn btn-sm btn-dark">
+                        Próxima <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+            <p class="mb-0 mt-2 small opacity-75">
+                De @inicioSemana.ToString("dd/MM/yyyy") a @fimSemana.ToString("dd/MM/yyyy")
+            </p>
+        </div>
+        <div class="card-body p-0 ">
+            <div class="table-responsive rounded-1">
+                <table class="table table-bordered table-striped text-center mb-0 align-middle">
+                    <thead class="bg-light ">
+                        <tr>
+                            <th class="text-start ps-3" style="min-width: 150px;">Dia</th>
+                            @foreach (var dia in diasSemana)
+                            {
+                                var classeHoje = dia.Date == DateTime.Today ? "bg-warning text-dark" : "";
+                                <th class="@classeHoje" style="min-width: 120px;">
+                                    <div class="small opacity-75">@dia.ToString("ddd").ToUpper()</div>
+                                    <div class="fw-bold">@dia.Day</div>
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start fw-bold text-primary ps-3 ">
+                                <i class="fa fa-clock me-1"></i> Horário
+                            </td>
+                            @foreach (var dia in diasSemana)
+                            {
+                                // Procura se existe escala para este dia
+                                var escala = escalas.FirstOrDefault(e => e.Data.Date == dia.Date);
+
+                                <td>
+                                    @if (escala != null && escala.Saida != TimeSpan.Zero)
+                                    {
+                                        // TRABALHA
+                                        <span class="d-block fw-bold text-success">
+                                            @escala.Entrada.ToString(@"hh\:mm") - @escala.Saida.ToString(@"hh\:mm")
+                                        </span>
+                                        @if (!string.IsNullOrEmpty(escala.Observacao))
+                                        {
+                                            <small class="text-muted d-block mt-1">@escala.Observacao</small>
+                                        }
+                                    }
+                                    else if (escala != null && escala.Saida == TimeSpan.Zero)
+                                    {
+                                        // FOLGA (registro existe mas saída é zero)
+                                        <span class="badge bg-secondary opacity-50 fw-normal">Folga</span>
+                                    }
+                                    else
+                                    {
+                                        // FOLGA (Não tem registro no banco)
+                                        <span class="badge bg-secondary opacity-25 fw-normal">Folga</span>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

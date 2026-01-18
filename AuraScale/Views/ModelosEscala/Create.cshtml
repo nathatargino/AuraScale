@@ -7,7 +7,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow mt-4 border-1">
-            <div class="card-header bg-dark text-white py-3 rounded-0">
+            <div class="card-header bg-dark text-white py-3 rounded-1">
                 <h5 class="mb-0 fw-bold"><i class="fa fa-layer-group me-2"></i> Configurar Nova Regra</h5>
             </div>
 
@@ -17,20 +17,20 @@
 
                     <div class="mb-3">
                         <label asp-for="Nome" class="form-label fw-bold"></label>
-                        <input asp-for="Nome" class="form-control rounded-0" placeholder="Ex: Escritório 5x2 ou Loja 6x1" />
+                        <input asp-for="Nome" class="form-control rounded-1" placeholder="Ex: Escritório 5x2 ou Loja 6x1" />
                         <span asp-validation-for="Nome" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="CargaHorariaDiaria" class="form-label fw-bold">Jornada (Seg-Sex)</label>
-                        <input asp-for="CargaHorariaDiaria" type="time" class="form-control rounded-0" value="08:00" />
+                        <input asp-for="CargaHorariaDiaria" type="time" class="form-control rounded-1" value="08:00" />
                     </div>
 
                     <hr />
 
                     <div class="mb-3">
                         <label asp-for="RegraSabado" class="form-label fw-bold text-info">Regra de Trabalho aos Sábados</label>
-                        <select asp-for="RegraSabado" id="selectRegraSabado" class="form-select rounded-0"
+                        <select asp-for="RegraSabado" id="selectRegraSabado" class="form-select rounded-1"
                                 asp-items="Html.GetEnumSelectList<AuraScale.Models.TipoTrabalhoSabado>()">
                         </select>
                     </div>
@@ -47,8 +47,8 @@
                     </div>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-2">
-                        <a asp-action="Index" class="btn btn-secondary me-md-2 px-4 rounded-0">Cancelar</a>
-                        <button type="submit" class="btn btn-success px-4 shadow-sm rounded-0">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2 px-4 rounded-1">Cancelar</a>
+                        <button type="submit" class="btn btn-success px-4 shadow-sm rounded-1">
                             <i class="fa fa-save me-2"></i> Salvar Modelo
                         </button>
                     </div>

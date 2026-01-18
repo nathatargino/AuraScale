@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // 2. Identity
@@ -58,6 +58,22 @@ builder.Services.AddControllersWithViews()
     .AddDataAnnotationsLocalization();
 
 var app = builder.Build();
+
+// Aplicar migrações automaticamente ao iniciar a aplicação
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocorreu um erro ao aplicar migrações do banco de dados.");
+    }
+}
 
 // --- CONFIGURAÇÃO DE CULTURAS ---
 var supportedCultures = new[] { "pt-BR", "en-US" };
