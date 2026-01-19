@@ -1,34 +1,74 @@
-# ⚖️ AuraScale - Gestão Inteligente de Escalas
+# 🚀 AuraScale - Gestão de Escalas Inteligente
 
-O **AuraScale** é uma plataforma robusta desenvolvida para automatizar a criação e gestão de escalas de trabalho. O foco principal do projeto é facilitar a vida de gestores através de uma interface moderna e um motor de processamento inteligente de dados.
+O **AuraScale** é uma aplicação Full Stack desenvolvida para automatizar e organizar escalas de trabalho de equipes e gestores. O projeto foi construído com foco em escalabilidade, utilizando as tecnologias mais recentes do ecossistema .NET e infraestrutura em nuvem no Microsoft Azure.
 
-## 🚀 Funcionalidades Principais
-
-* **Dashboard de Controle**: Visão geral da operação em tempo real com interface otimizada.
-* **Importação Inteligente via Excel**: Processamento de grandes volumes de dados de operadores utilizando a biblioteca **ClosedXML**, com lógica automática para criação de novos modelos de escala caso não existam no sistema.
-* **Gestão de Operadores**: CRUD completo com visualização de detalhes em formato de perfil, facilitando a revisão de vínculos de escala.
-* **Modelos Dinâmicos**: Criação de regras de carga horária para dias úteis, sábados e domingos.
-* **Autenticação Segura**: Login integrado via **Google OAuth 2.0** com proteção de credenciais através de **User Secrets**.
+## 🌐 Link do Projeto
+O sistema está online e pode ser acessado em:  
+https://aurascale.azurewebsites.net
 
 ## 🛠️ Tecnologias Utilizadas
 
-* **Framework**: ASP.NET Core 8.0 (MVC).
-* **Linguagem**: C# (utilizando recursos avançados de LINQ, Expression Lambdas e Interfaces).
-* **Persistência**: Entity Framework Core com SQL Server (ou SQLite para desenvolvimento).
-* **Processamento de Arquivos**: ClosedXML (Leitura e Escrita de .xlsx).
-* **Frontend**: Bootstrap 5 com componentes customizados (Dark Theme/Modern UI).
+### **Back-end**
+* **C# / .NET 10**: Linguagem e framework principal da aplicação.
+* **ASP.NET Core MVC**: Arquitetura do sistema.
+* **Entity Framework Core**: ORM para comunicação com o banco de dados.
+* **ASP.NET Core Identity**: Sistema de autenticação e autorização.
+* **Google OAuth 2.0**: Integração para login social seguro.
 
-## 🔒 Segurança e Melhores Práticas
+### **Banco de Dados**
+* **Azure SQL Database**: Banco de dados relacional em nuvem.
 
-Como o foco do projeto é o desenvolvimento Back-End de alta confiabilidade, foram aplicadas as seguintes camadas de proteção:
+### **Front-end**
+* **Bootstrap 5 (Tema Quartz)**: Design responsivo e moderno.
+* **FontAwesome**: Ícones para melhor experiência do usuário.
+* **JavaScript / jQuery**: Interações dinâmicas e componentes UI.
 
-* **Gerenciamento de Segredos**: Utilização do **Secret Manager (User Secrets)** do .NET para armazenar chaves de API e Client Secrets em ambiente de desenvolvimento, impedindo que dados sensíveis sejam rastreados pelo controle de versão.
-* **Prevenção de Vazamentos (Git)**: Arquivo `.gitignore` rigorosamente configurado para excluir pastas de build (`bin/`, `obj/`), caches da IDE (`.vs/`) e arquivos de configuração que possam conter strings de conexão locais.
-* **Autenticação e Identidade**: Integração com **Google OAuth 2.0** utilizando o middleware de autenticação do ASP.NET Core. O sistema não apenas valida a identidade do usuário, mas também gerencia o ciclo de vida dos claims, permitindo que cada gerente possua um ambiente isolado e seguro para seus dados.
-* **Proteção de Push**: Configuração de regras de proteção no GitHub para identificar e bloquear automaticamente o upload de segredos expostos no `appsettings.json`.
+### **Infraestrutura & DevOps**
+* **Microsoft Azure**: Hospedagem via App Service.
+* **GitHub Actions**: Pipeline de CI/CD para deploy automatizado.
 
-## 🏁 Como Rodar o Projeto
+## 📋 Funcionalidades
+- [x] **Autenticação Segura**: Login via Google e sistema de contas nativo.
+- [x] Portal do Colaborador: Consulta individual de escala personalizada via login por e-mail.
+- [x] **Gestão de Operadores**: Cadastro completo da equipe.
+- [x] **Importação de Dados**: Suporte para carga massiva de operadores via arquivo XLSX (Excel).
+- [x] Inteligência de Dados: Validação automática de conflitos de horário para impedir duplicidade de escalas.
+- [x] **Dashboard Responsivo**: Interface adaptada para desktop e dispositivos móveis.
 
-1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/nathatargino/AuraScale.git](https://github.com/nathatargino/AuraScale.git)
+## 💻 Como Rodar o Projeto Localmente
+
+### 1. Pré-requisitos
+* .NET 10 SDK instalado.
+* SQL Server (LocalDB ou Express).
+* Visual Studio ou IDE de sua preferência .
+
+### 2. Clonar o Repositório
+```bash
+git clone https://github.com/nathatargino/AuraScale.git
+cd AuraScale
+```
+
+## 3. Configurar o Banco de Dados
+* Abra o arquivo appsettings.json e ajuste a Connection String para o seu SQL Server local:
+```bash
+"ConnectionStrings": {
+  "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=AuraScale;Trusted_Connection=True;MultipleActiveResultSets=true"
+}
+```
+
+## 4. Executar Migrations
+No Gerenciador de Pacotes ou Terminal, execute os comandos para criar as tabelas:
+```bash
+dotnet ef database update
+```
+
+## 5. Iniciar a Aplicação
+```bash
+dotnet run
+```
+
+## 👤 Desenvolvedor
+**Nathã Targino** Desenvolvedor FullStack.
+
+- LinkedIn: https://www.linkedin.com/in/nathatargino/
+- GitHub: https://github.com/nathatargino
