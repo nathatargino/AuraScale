@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-dark mb-0"><i class="fa fa-chart-line me-2 text-primary"></i> Painel de Gestão</h2>
-            <p class="text-muted mb-0">Bem-vindo ao AuraScale, Nathã.</p>
+            <p class="text-muted mb-0">Bem-vindo ao AuraScale, @(User.Identity.IsAuthenticated? User.Identity.Name : "Visitante").</p>
         </div>
 
         <div class="d-flex align-items-center gap-3">
