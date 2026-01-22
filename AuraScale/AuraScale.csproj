@@ -35,9 +35,10 @@
     <Folder Include="wwwroot\lib\jquery\dist\" />
   </ItemGroup>
 
-  <ItemGroup>
-  <EmbeddedResource Include="Resources\**\*.resx" />
-  </ItemGroup>
-
+<ItemGroup>
+  <EmbeddedResource Update="Resources\Areas\Identity\Pages\Account\Manage\*.resx">
+    <Generator>PublicResXFileCodeGenerator</Generator>
+  </EmbeddedResource>
+</ItemGroup>
 
 </Project>
