@@ -1,0 +1,129 @@
+﻿@page
+@model LoginWith2faModel
+@{
+    ViewData["Title"] = "Verificação de Segurança";
+    ViewData["HideNavbar"] = true; // Garante que não mostre o menu do sistema
+}
+
+<style>
+    .login-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+    .bg-aura-dark {
+        background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+    }
+
+    /* Input do código maior e centralizado */
+    .code-input {
+        letter-spacing: 0.15rem;
+        font-size: 1.1rem; 
+        text-align: center; 
+        font-weight: 600;
+        color: #495057;
+    }
+
+    /* AJUSTE PARA TELAS MENORES */
+    @@media (max-height: 800px) {
+        .card {
+            max-width: 780px;
+        }
+
+        .p-4 {
+            padding: 1.25rem !important;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+        }
+
+        .fa-5x {
+            font-size: 3.5rem;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="width: 900px;">
+        <div class="row g-0">
+
+            <div class="col-md-5 bg-aura-dark text-white d-flex align-items-center justify-content-center p-4 text-center">
+                <div>
+                    <div class="mb-4">
+                        <i class="fa fa-shield-alt fa-5x opacity-75"></i>
+                    </div>
+                    <h2 class="fw-bold mb-3">Segurança Extra</h2>
+                    <p class="small opacity-75">
+                        Protegendo sua conta AuraScale.
+                        <br />
+                        Apenas mais um passo para garantir que é você.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-7 bg-body p-4">
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold text-dark">Autenticação de Dois Fatores</h4>
+                    <p class="text-muted small">Digite o código gerado pelo seu aplicativo autenticador.</p>
+                </div>
+
+                <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+                    <input asp-for="RememberMe" type="hidden" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                    <div class="mb-4 text-center">
+                        <label asp-for="Input.TwoFactorCode" class="form-label text-muted small text-uppercase fw-bold mb-2">
+                            Código do Autenticador
+                        </label>
+
+                        <input asp-for="Input.TwoFactorCode"
+                               class="form-control form-control-lg text-center rounded-3 border-secondary-subtle"
+                               autocomplete="off"
+                               placeholder="000 000"
+                               maxlength="7"
+                               style="font-size: 1.3rem; letter-spacing: 0.1rem; font-family: monospace;" />
+
+                        <span asp-validation-for="Input.TwoFactorCode" class="text-danger small d-block mt-1"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-center mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="Input.RememberMachine" />
+                            <label class="form-check-label small text-muted" asp-for="Input.RememberMachine">
+                                Não pedir neste dispositivo por 30 dias
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-1 rounded-3 fw-bold mb-3 shadow-sm">
+                        VALIDAR ACESSO
+                    </button>
+
+                    <div class="text-center mt-3 border-top pt-3">
+                        <p class="small text-muted mb-1">Perdeu o acesso ao celular?</p>
+                        <a id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl" class="small fw-bold text-decoration-none text-danger">
+                            <i class="fa fa-key me-1"></i> Usar código de emergência
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

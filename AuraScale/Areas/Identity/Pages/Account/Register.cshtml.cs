@@ -78,7 +78,7 @@ namespace AuraScale.Areas.Identity.Pages.Account
             [Required(ErrorMessage = "O campo Senha é obrigatório.")]
             [StringLength(100, ErrorMessage = "A {0} deve ter no mínimo {2} e no máximo {1} caracteres.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Senha")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]

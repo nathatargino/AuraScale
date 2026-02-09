@@ -2,6 +2,7 @@ using AuraScale.Data;
 using AuraScale.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using AuraScale.Configurations;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization; 
 
@@ -18,8 +19,16 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => {
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
+    // Configurações de Senha (Password)
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
+.AddErrorDescriber<PortugueseIdentityErrorDescriber>()
 .AddDefaultTokenProviders();
 
 // 3. Configuração de Cookies 

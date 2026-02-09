@@ -1,0 +1,112 @@
+﻿@page
+@model LoginWithRecoveryCodeModel
+@{
+    ViewData["Title"] = "Recuperação de Conta";
+    ViewData["HideNavbar"] = true;
+}
+
+<style>
+    .login-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+    .bg-aura-dark {
+        background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+    }
+
+    /* AJUSTE PARA TELAS MENORES */
+    @@media (max-height: 800px) {
+        .card {
+            max-width: 780px;
+        }
+
+        .p-4 {
+            padding: 1.25rem !important;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+        }
+
+        .fa-5x {
+            font-size: 3.5rem;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="width: 900px;">
+        <div class="row g-0">
+
+            <div class="col-md-5 bg-aura-dark text-white d-flex align-items-center justify-content-center p-4 text-center">
+                <div>
+                    <div class="mb-4">
+                        <i class="fa fa-life-ring fa-5x opacity-75"></i>
+                    </div>
+                    <h2 class="fw-bold mb-3">Modo de Resgate</h2>
+                    <p class="small opacity-75">
+                        Perdeu o acesso ao seu celular?
+                        <br />
+                        Use um dos seus códigos de recuperação salvos para entrar.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-7 bg-body p-4">
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold text-dark">Código de Recuperação</h4>
+                    <p class="text-muted small">
+                        Insira o código abaixo. <br>
+                        <span class="text-danger fw-bold">Atenção:</span> O código será invalidado após o uso.
+                    </p>
+                </div>
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                    <div class="mb-4 text-center">
+                        <label asp-for="Input.RecoveryCode" class="form-label text-muted small text-uppercase fw-bold mb-2">
+                            Código de Resgate
+                        </label>
+
+                        <input asp-for="Input.RecoveryCode"
+                               class="form-control form-control-lg text-center rounded-3 border-secondary-subtle"
+                               autocomplete="off"
+                               placeholder="Ex: ab12-cd34"
+                               style="font-size: 1.3rem; letter-spacing: 0.1rem; font-family: monospace;" />
+
+                        <span asp-validation-for="Input.RecoveryCode" class="text-danger small d-block mt-1"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-1 rounded-3 fw-bold mb-3 shadow-sm">
+                        VALIDAR E ENTRAR
+                    </button>
+
+                    <div class="text-center mt-3 border-top pt-3">
+                        <p class="small text-muted mb-1">Encontrou o celular?</p>
+                        <a asp-page="./LoginWith2fa" asp-route-returnUrl="@Model.ReturnUrl" class="small fw-bold text-decoration-none">
+                            <i class="fa fa-arrow-left me-1"></i> Voltar para autenticação padrão
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
